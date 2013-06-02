@@ -36,10 +36,10 @@
 //----------------------------------------------------------------------------//
 
 #define FIELD3D_MAJOR_VER 1
-#define FIELD3D_MINOR_VER 3
-#define FIELD3D_MICRO_VER 2
+#define FIELD3D_MINOR_VER 4
+#define FIELD3D_MICRO_VER 0
 
-#define FIELD3D_VERSION_NS v1_3
+#define FIELD3D_VERSION_NS v1_4
 
 #ifdef FIELD3D_EXTRA_NAMESPACE
 
@@ -60,6 +60,21 @@
 #  define FIELD3D_NAMESPACE_SOURCE_CLOSE \
   } } 
 
+#endif
+
+#ifdef WIN32
+
+#  ifdef FIELD3D_STATIC
+#    define FIELD3D_API
+#  else
+#    ifdef FIELD3D_EXPORT
+#      define FIELD3D_API __declspec(dllexport)
+#    else
+#      define FIELD3D_API __declspec(dllimport)
+#    endif
+#  endif
+#else
+#  define FIELD3D_API
 #endif
 
 //----------------------------------------------------------------------------//

@@ -70,11 +70,15 @@ namespace Msg {
 
   //! Sends the string to the assigned output, prefixing the message with
   //! the severity
-  void print(Severity severity, const std::string &message);
+  FIELD3D_API void print(Severity severity, const std::string &message);
 
   //! Sends the string to the assigned output
   inline void print(const std::string &message)
   { print(SevMessage, message); }
+
+  //! Set the verbosity level of console output: 0 = do not echo anything
+  //! to the console; >=1 = echo all messages and warnings to the console.
+  FIELD3D_API void setVerbosity (int level=1);
 
 } // namespace Msg
 
