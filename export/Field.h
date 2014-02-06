@@ -473,6 +473,14 @@ class Field<Data_T>::const_iterator
 {
 
 public:
+#if defined(WIN32) || __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
+  typedef std::forward_iterator_tag iterator_category;
+  typedef Data_T value_type;
+  typedef ptrdiff_t difference_type;
+  typedef ptrdiff_t distance_type;
+  typedef Data_T *pointer;
+  typedef Data_T& reference;
+#endif
 
   // Constructors --------------------------------------------------------------
 
@@ -676,7 +684,7 @@ template <class Data_T>
 class WritableField<Data_T>::iterator
 {
 public:
-#ifdef WIN32
+#if defined(WIN32) || __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
   typedef std::forward_iterator_tag iterator_category;
   typedef Data_T value_type;
   typedef ptrdiff_t difference_type;
@@ -1078,8 +1086,12 @@ inline V3d discToCont(const V3i &discCoord)
 template <class Iter_T>
 void advance(Iter_T &iter, int num) 
 {
-  if (num <= 0) return;
-  for (int i=0; i<num; ++i, ++iter);
+  if (num <= 0) {
+    return;
+  }
+  for (int i=0; i<num; ++i, ++iter) {
+    // Empty
+  }
 }
 
 //----------------------------------------------------------------------------//
@@ -1088,9 +1100,12 @@ void advance(Iter_T &iter, int num)
 template <class Iter_T>
 void advance(Iter_T &iter, int num, const Iter_T &end) 
 {
-  if (num <= 0) 
+  if (num <= 0) {
     return;
-  for (int i=0; i<num && iter != end; ++i, ++iter);
+  }
+  for (int i=0; i<num && iter != end; ++i, ++iter) {
+    // Empty
+  }
 }
 
 //----------------------------------------------------------------------------//

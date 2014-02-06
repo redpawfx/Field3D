@@ -167,6 +167,10 @@ def setupEnv(env, pathToRoot = "."):
     baseIncludePaths = systemIncludePaths[sys.platform][architectureStr()]
     baseLibPaths = systemLibPaths[sys.platform][architectureStr()]
     baseLibs = systemLibs[sys.platform]
+    # Compiler
+    compiler = ARGUMENTS.get('compiler', '')
+    if compiler != '':
+        env.Replace(CXX = compiler)
     # System include paths
     env.Append(CPPPATH = baseIncludePaths)
     # System lib paths
@@ -222,6 +226,7 @@ def setupEnv(env, pathToRoot = "."):
     else:
         env.Append(CCFLAGS = ["-g", "-O3"])
     env.Append(CCFLAGS = ["-Wall"])
+    env.Append(CCFLAGS = ["-Wextra"])
     # Set number of jobs to use
     env.SetOption('num_jobs', numCPUs())
     # 64 bit setup

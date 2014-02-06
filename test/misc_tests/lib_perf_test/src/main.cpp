@@ -60,6 +60,10 @@
 
 #ifdef __APPLE__
 #include <mach/mach.h>
+#elif __linux__
+#include <unistd.h>
+#include <ios>
+#include <fstream>
 #endif
 
 //----------------------------------------------------------------------------//
@@ -94,6 +98,32 @@ static size_t currentRSS()
     return -1;
   }
   return t_info.resident_size;
+#elif __linux__
+  using std::ios_base;
+  using std::ifstream;
+  using std::string;
+
+  ifstream stat_stream("/proc/self/stat", ios_base::in);
+
+  string pid, comm, state, ppid, pgrp, session, tty_nr;
+  string tpgid, flags, minflt, cminflt, majflt, cmajflt;
+  string utime, stime, cutime, cstime, priority, nice;
+  string O, itrealvalue, starttime;
+
+  unsigned long vsize;
+  long rss;
+
+  stat_stream >> pid >> comm >> state >> ppid >> pgrp >> session >> tty_nr
+              >> tpgid >> flags >> minflt >> cminflt >> majflt >> cmajflt
+              >> utime >> stime >> cutime >> cstime >> priority >> nice
+              >> O >> itrealvalue >> starttime >> vsize >> rss; // don't care about the rest
+
+  stat_stream.close();
+
+  long page_size = sysconf(_SC_PAGE_SIZE); // in case x86-64 is configured to use 2MB pages
+  // vm_usage     = vsize / 1024.0;
+  // resident_set = rss * page_size;
+  return rss * page_size;
 #endif
 }
 
@@ -339,6 +369,11 @@ int main()
 
   cout << "Dense Domain Tests - Field3D & OpenVDB (taking " << samples << 
     " samples, time in ms)" << endl;
+  cout << "  Field3D - " << FIELD3D_MAJOR_VER << "." << FIELD3D_MINOR_VER 
+       << "." << FIELD3D_MICRO_VER << endl;
+  cout << "  OpenVDB - " << OPENVDB_LIBRARY_MAJOR_VERSION << "." 
+       << OPENVDB_LIBRARY_MINOR_VERSION << "."
+       << OPENVDB_LIBRARY_PATCH_VERSION << endl;
 
   testContiguousWriteAccess(baseRes, samples);
   testContiguousPreAllocWriteAccess(baseRes, samples);

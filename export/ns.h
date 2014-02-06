@@ -37,7 +37,7 @@
 
 #define FIELD3D_MAJOR_VER 1
 #define FIELD3D_MINOR_VER 4
-#define FIELD3D_MICRO_VER 0
+#define FIELD3D_MICRO_VER 3
 
 #define FIELD3D_VERSION_NS v1_4
 
@@ -75,6 +75,10 @@
 #  endif
 #else
 #  define FIELD3D_API
+#endif
+
+#ifdef __APPLE__
+#include <Availability.h>
 #endif
 
 //----------------------------------------------------------------------------//
